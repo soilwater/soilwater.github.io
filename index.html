@@ -3,35 +3,87 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Lab</title>
+  <title>Soil Water Processes</title>
+  <meta name="description" content="Research on in situ soil physical properties and soil moisture, plus open-source tools and apps for agronomy and soil science." />
 
   <style>
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+      --muted: #555555;
+      --faint: #999999;
+      --line: #e5e5e5;
+      --link: #0969da;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #0d1117;
+        --text: #e6edf3;
+        --muted: #9da7b3;
+        --faint: #6e7681;
+        --line: #21262d;
+        --link: #4493f8;
+      }
+    }
+    :root[data-theme="dark"] {
+      --bg: #0d1117;
+      --text: #e6edf3;
+      --muted: #9da7b3;
+      --faint: #6e7681;
+      --line: #21262d;
+      --link: #4493f8;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #ffffff;
-      color: #111111;
+      background: var(--bg);
+      color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       font-size: 15px;
       line-height: 1.6;
       padding: 0 1.5rem;
+      -webkit-font-smoothing: antialiased;
     }
 
     .site-wrapper {
-      max-width: 680px;
+      max-width: 920px;
       margin: 0 auto;
     }
 
     /* ── Header ── */
     header {
-      padding: 4rem 0 2.5rem;
-      border-bottom: 1px solid #e5e5e5;
+      display: flex;
+      align-items: stretch;
+      gap: 1.5rem;
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .lab-photo {
+      flex: 0 0 clamp(96px, 28%, 150px);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .lab-photo img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 50% 35%;
+    }
+
+    .lab-header-text {
+      align-self: center;
+      min-width: 0;
     }
 
     .lab-name {
       font-size: 1.75rem;
       font-weight: 600;
-      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.25rem;
     }
 
     .lab-name a {
@@ -41,70 +93,73 @@
     .lab-name a:hover { text-decoration: underline; }
 
     .lab-tagline {
-      color: #555;
-      font-size: 0.9rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      max-width: 46ch;
     }
 
     .lab-links {
-      margin-top: 0.9rem;
+      margin-top: 1rem;
       display: flex;
       gap: 1.2rem;
       flex-wrap: wrap;
     }
 
     .lab-links a {
-      color: #555;
+      color: var(--muted);
       font-size: 0.85rem;
       text-decoration: none;
     }
-    .lab-links a:hover { text-decoration: underline; }
+    .lab-links a:hover { color: var(--link); text-decoration: underline; }
 
-    /* ── Section label ── */
-    .section-label {
+    /* ── Project groups (responsive columns) ── */
+    .project-groups {
+      columns: 260px 3;
+      column-gap: 2.5rem;
+      margin: 2.25rem 0 0;
+    }
+
+    .project-group {
+      break-inside: avoid;
+      margin-bottom: 2rem;
+    }
+
+    .group-label {
       font-size: 0.7rem;
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: #999;
-      margin: 2.5rem 0 0.75rem;
+      color: var(--text);
+      margin-bottom: 0.25rem;
     }
 
-    /* ── Project list ── */
     .project-card {
-      display: flex;
-      align-items: baseline;
-      gap: 0.6rem;
-      padding: 0.45rem 0;
-      border-bottom: 1px solid #e5e5e5;
+      display: block;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--line);
       text-decoration: none;
       color: inherit;
     }
-
-    .project-list .project-card:first-child { border-top: 1px solid #e5e5e5; }
+    .project-group .project-card:first-of-type { border-top: 1px solid var(--line); }
 
     .project-name {
-      font-weight: 500;
-      color: #0969da;
-      white-space: nowrap;
-      flex-shrink: 0;
+      font-weight: 600;
+      color: var(--link);
     }
     .project-card:hover .project-name { text-decoration: underline; }
 
-    .project-sep { color: #ccc; flex-shrink: 0; }
-
     .project-desc {
-      color: #555;
+      display: block;
+      color: var(--muted);
       font-size: 0.875rem;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      margin-top: 0.15rem;
     }
 
     /* ── Footer ── */
     footer {
       padding: 2.5rem 0 3.5rem;
       font-size: 0.8rem;
-      color: #aaa;
+      color: var(--faint);
     }
   </style>
 </head>
@@ -115,35 +170,52 @@
     const LAB = {
       name:    "Soil Water Processes",
       github:  "https://github.com/soilwater",
-      tagline: "Research related to in situ soil physical properties and soil moisture.",
+      tagline: "Research on in situ soil physical properties and soil moisture, and open-source tools for agronomy and soil science.",
       links: [
         { label: "GitHub", url: "https://github.com/soilwater" },
         { label: "Email",  url: "mailto:andrespatrignani@ksu.edu" },
       ],
     };
 
-    // Add / remove projects here => Fields: name, url, desc
-    const PROJECTS = [
-      { name: "Kings Creek Soil Moisture Network", url: "https://github.com/soilwater/kings-creek-soil-moisture", desc: "In situ network within the Konza Prairie Biological Station." },
-      { name: "PyNotes Agriscience",  url: "https://soilwater.github.io/pynotes-agriscience/",  desc: "Python tutorials for common tasks in agronomy, crop science, and soil science." },
-      { name: "PyNotes GEE", url: "https://github.com/yourusername/project-gamma", desc: "Python tutorials for using Google Earth Engine." },
-      { name: "CRNPy", url: "https://soilwater.github.io/crnpy/", desc: "A Python toolbox for handling common tasks with cosmic-ray neutron probes."},
-      { name: "Soil moisture sensor layouts", url: "https://soilwater.github.io/soil-moisture-sensor-depths/", desc: "App to visualize the error and vertical distribution of different soil moisture sensor layouts."},
-      { name: "Quadrat", url: "https://soilwater.github.io/quadrat/", desc: "A digital version of the traditional field quadrat."},
-      { name: "Interactive SWRC", url: "https://soilwater.github.io/interactive-swrc/", desc: "Applet to learn the concept of soil water retention curves."},
+    // Order in which groups appear on the page.
+    const GROUPS = ["Apps & Tools", "Python Libraries", "Tutorials", "Networks & Data"];
 
+    // Add / remove projects here. Fields: name, url, desc, group (must match a GROUPS entry)
+    const PROJECTS = [
+      { group: "Apps & Tools", name: "dualKc Studio", url: "https://dualkc.studio/", desc: "Soil water balance model using the FAO-56 dual crop coefficient approach to estimate crop evapotranspiration." },
+      { group: "Apps & Tools", name: "Daily Rootzone Irrigation Planner", url: "https://github.com/soilwater/drip", desc: "Phone-friendly app that tracks the rootzone soil water balance to plan daily irrigation." },
+      { group: "Apps & Tools", name: "Kansas Soil Moisture Maps", url: "https://soilwater.github.io/kansas-1km/", desc: "Daily 1-km maps of plant-available water in the top 50 cm of soil across Kansas." },
+      { group: "Apps & Tools", name: "Canopeo Toolkit", url: "https://soilwater.github.io/canopeo-toolkit/", desc: "Offline apps to measure green canopy cover from downward-facing field photos." },
+      { group: "Apps & Tools", name: "Canopeo-Hub", url: "https://canopeo-hub.onrender.com/", desc: "Platform for sharing and analyzing canopy-cover observations." },
+      { group: "Apps & Tools", name: "Stover", url: "https://soilwater.github.io/stover/", desc: "In-browser neural network that classifies crop residue, green canopy, and bare soil in field photos." },
+      { group: "Apps & Tools", name: "Soil moisture sensor layouts", url: "https://soilwater.github.io/soil-moisture-sensor-depths/", desc: "App to visualize the error and vertical distribution of different soil moisture sensor layouts." },
+      { group: "Apps & Tools", name: "Quadrat", url: "https://soilwater.github.io/quadrat/", desc: "A digital version of the traditional field quadrat." },
+      { group: "Apps & Tools", name: "Interactive SWRC", url: "https://soilwater.github.io/interactive-swrc/", desc: "Applet to learn the concept of soil water retention curves." },
+
+      { group: "Python Libraries", name: "CRNPy", url: "https://soilwater.github.io/crnpy/", desc: "A Python toolbox for handling common tasks with cosmic-ray neutron probes." },
+      { group: "Python Libraries", name: "guile", url: "https://www.pyguile.org/", desc: "Lightweight Python framework for building interactive desktop dashboards and data explorers." },
+
+      { group: "Tutorials", name: "PyNotes Agriscience", url: "https://soilwater.github.io/pynotes-agriscience/", desc: "Python tutorials for common tasks in agronomy, crop science, and soil science." },
+      { group: "Tutorials", name: "PyNotes GEE", url: "https://soilwater.github.io/pynotes-gee/", desc: "Python tutorials for using Google Earth Engine." },
+
+      { group: "Networks & Data", name: "MIST: Multi-state Soil Moisture In-situ Testbeds", url: "https://github.com/soilwater/mist", desc: "Evaluate, calibrate, and disseminate existing and emerging research-grade and consumer-grade in-situ sensing technologies." },
+      { group: "Networks & Data", name: "Kings Creek Soil Moisture Network", url: "https://github.com/soilwater/kings-creek-soil-moisture", desc: "In situ network within the Konza Prairie Biological Station." },
     ];
   </script>
 
 
   <header>
-    <h1 class="lab-name"><a id="lab-name-link" href="#"></a></h1>
-    <p class="lab-tagline" id="lab-tagline"></p>
-    <nav class="lab-links" id="lab-links"></nav>
+    <figure class="lab-photo">
+      <img src="landing.jpg" alt="Researchers installing a soil moisture monitoring station in a tallgrass prairie field." />
+    </figure>
+    <div class="lab-header-text">
+      <h1 class="lab-name"><a id="lab-name-link" href="#"></a></h1>
+      <p class="lab-tagline" id="lab-tagline"></p>
+      <nav class="lab-links" id="lab-links"></nav>
+    </div>
   </header>
 
-  <p class="section-label">Projects</p>
-  <div class="project-list" id="project-list"></div>
+  <div class="project-groups" id="project-groups"></div>
 
   <footer id="footer"></footer>
 
@@ -165,23 +237,47 @@
     linksEl.appendChild(a);
   });
 
-  const listEl = document.getElementById('project-list');
-  PROJECTS.forEach(({ name, url, desc }) => {
-    const a = document.createElement('a');
-    a.className = 'project-card';
-    a.href = url;
-    a.target = '_blank';
-    a.rel = 'noopener noreferrer';
-    a.innerHTML = `
-      <span class="project-name">${name}</span>
-      <span class="project-sep">—</span>
-      <span class="project-desc">${desc}</span>
-    `;
-    listEl.appendChild(a);
+  const groupsEl = document.getElementById('project-groups');
+
+  // Preserve GROUPS order; append any group not listed there at the end.
+  const order = [...GROUPS, ...PROJECTS.map(p => p.group).filter(g => !GROUPS.includes(g))];
+  const seen = new Set();
+  order.filter(g => !seen.has(g) && seen.add(g)).forEach(group => {
+    const items = PROJECTS.filter(p => p.group === group);
+    if (!items.length) return;
+
+    const section = document.createElement('section');
+    section.className = 'project-group';
+
+    const label = document.createElement('h2');
+    label.className = 'group-label';
+    label.textContent = group;
+    section.appendChild(label);
+
+    items.forEach(({ name, url, desc }) => {
+      const a = document.createElement('a');
+      a.className = 'project-card';
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      const nameEl = document.createElement('span');
+      nameEl.className = 'project-name';
+      nameEl.textContent = name;
+
+      const descEl = document.createElement('span');
+      descEl.className = 'project-desc';
+      descEl.textContent = desc;
+
+      a.append(nameEl, descEl);
+      section.appendChild(a);
+    });
+
+    groupsEl.appendChild(section);
   });
 
   document.getElementById('footer').textContent =
-    `© ${new Date().getFullYear()} ${LAB.name}`;
+    `© ${new Date().getFullYear()} ${LAB.name} | Department of Agronomy | Kansas State University`;
 </script>
 </body>
 </html>
